@@ -120,3 +120,23 @@ services:
         condition: service_healthy
     ports:
       - ${DOCKER_PUBLISH_IP:-127.0.0.1}:3061:3000
+  postgres-backup:
+    image: postgres:${POSTGRES_IMAGE_TAG:-16}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./backups:/backups
+    environment:
+      PGHOST: ${POSTGRES_HOST:-postgres}
+      PGPORT: ${POSTGRES_PORT:-5432}
+      PGUSER: ${POSTGRES_USER:-postgres}
+      PGPASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    entrypoint: ["/bin/bash", "-c"]
+    command:
+      - |
+        while true; do
+          TIMESTAMP=$$(date +%F_%H-%M-%S)
+          pg_dumpall --clean --if-exists > /backups/postgres_backup_$$TIMESTAMP.sql
+          sleep 3600
+        done
