@@ -12,7 +12,7 @@ services:
     image: ghcr.io/triggerdotdev/provider/docker:${TRIGGER_IMAGE_TAG:-v3}
     restart: ${RESTART_POLICY:-unless-stopped}
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - $XDG_RUNTIME_DIR/podman/podman.sock:/var/run/docker.sock
     user: root
     networks:
       - default
@@ -28,7 +28,7 @@ services:
     image: ghcr.io/triggerdotdev/coordinator:${TRIGGER_IMAGE_TAG:-v3}
     restart: ${RESTART_POLICY:-unless-stopped}
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - $XDG_RUNTIME_DIR/podman/podman.sock:/var/run/docker.sock
     user: root
     networks:
       - default

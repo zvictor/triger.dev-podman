@@ -27,7 +27,7 @@ cd docker
 
 4. The ports in the `docker-compose.yml` file are set so they are less likely to clash with your local webapp – the platform runs on 3040 and the database is on 5433. If you need to change these ports, you'll need to update the `LOGIN_ORIGIN`, `APP_ORIGIN` and `DATABASE_HOST` environment variables.
 
-### Stopping the Docker containers
+### Stopping the containers
 
 1. Run the stop script
 

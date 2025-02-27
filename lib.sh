@@ -1,12 +1,12 @@
 #!/bin/sh
 
 docker_compose() {
-    if docker compose >/dev/null 2>&1; then
+    if podman compose >/dev/null 2>&1; then
         set -x
-        docker compose "$@"
-    elif command -v docker-compose >/dev/null 2>&1; then
+        podman compose "$@"
+    elif command -v podman-compose >/dev/null 2>&1; then
         set -x
-        docker-compose "$@"
+        podman-compose "$@"
     else
         echo Please install docker compose: https://docs.docker.com/compose/install/
     fi
