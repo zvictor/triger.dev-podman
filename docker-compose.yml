@@ -19,6 +19,7 @@ networks:
 
 services:
   webapp:
+    driver: bridge
     image: ghcr.io/triggerdotdev/trigger.dev:${TRIGGER_IMAGE_TAG:-v3}
     restart: ${RESTART_POLICY:-unless-stopped}
     env_file:
@@ -47,6 +48,19 @@ services:
     command:
       - -c
       - wal_level=logical
+      - -c
+      - fsync=off
+      - -c
+      - full_page_writes=off
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB:-postgres}",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   redis:
     image: redis:${REDIS_IMAGE_TAG:-7}
@@ -102,6 +116,7 @@ services:
     networks:
       - webapp
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     ports:
       - ${DOCKER_PUBLISH_IP:-127.0.0.1}:3061:3000
